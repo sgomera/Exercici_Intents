@@ -14,10 +14,11 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_PERMISSION_WRITE = 1001;
+    private static final int REQUEST_PERMISSION_READ = 1001;
     private static final int REQUEST_PERMISSION_CAMERA = 2000;
     private boolean permissionGranted;
     private Button takePictureButton;
+    private Button selectFileButton;
     private ImageView imageView;
 
     @Override
@@ -25,39 +26,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        takePictureButton = (Button) findViewById(R.id.button_image);
-        imageView = (ImageView) findViewById(R.id.imageview);
+        takePictureButton = findViewById(R.id.button_image);
+        selectFileButton = findViewById(R.id.button_file);
+        imageView = findViewById(R.id.imageview);
 
         if (!permissionGranted) {
             checkPermissions();
-            return;
         }
-    }
-
-    // Checks if external storage is available for read and write
-    public boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
     // Initiate check for permissions.
     private boolean checkPermissions() {
 
-        //stores in permissionCheck, if the write external storage is granted or not. It's an integer
-        int permissionCheck = ContextCompat.checkSelfPermission(this,
+        int permissionCheckCamera = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA);
+        int permissionCheckReadStorage = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE);
 
-        //evaluates if the value of permissionCheck is not permission_Granted. If it's not granted,
-        //then it requests the camera permision and returns false to the boolean method.
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+        if ((permissionCheckCamera != PackageManager.PERMISSION_GRANTED) || permissionCheckReadStorage != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.CAMERA},
-                    REQUEST_PERMISSION_CAMERA);
+                    new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE},
+                    0);
             return false;
         } else {
             return true;
         }
     }
+
 
     // Handle permissions result
     @Override
@@ -65,17 +60,37 @@ public class MainActivity extends AppCompatActivity {
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_PERMISSION_CAMERA:
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    permissionGranted = true;
+
+            case 0:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    //          && grantResults[1] == PackageManager.PERMISSION_GRANTED
+                ) {
                     Toast.makeText(this, "Camera permission granted",
                             Toast.LENGTH_SHORT).show();
+                    takePictureButton.setEnabled(true);
+                    if (grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                        selectFileButton.setEnabled(true);
+                        Toast.makeText(this, "Read storage permission granted",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Select file button disabled", Toast.LENGTH_SHORT).show();
+                        selectFileButton.setEnabled(false);
+                    }
+                    break;
                 } else {
                     Toast.makeText(this, "Take picture button disabled", Toast.LENGTH_SHORT).show();
                     takePictureButton.setEnabled(false);
+                    if (grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                        selectFileButton.setEnabled(true);
+                        Toast.makeText(this, "Read storage permission granted",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Select file button disabled", Toast.LENGTH_SHORT).show();
+                        selectFileButton.setEnabled(false);
+                    }
+                    break;
                 }
-                break;
+
         }
     }
 }

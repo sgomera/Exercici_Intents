@@ -14,8 +14,6 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_PERMISSION_READ = 1001;
-    private static final int REQUEST_PERMISSION_CAMERA = 2000;
     private boolean permissionGranted;
     private Button takePictureButton;
     private Button selectFileButton;

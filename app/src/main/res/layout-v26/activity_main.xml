@@ -105,7 +105,8 @@
         android:textAlignment="textEnd"
         app:layout_constraintBaseline_toBaselineOf="@+id/callButton"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="@+id/guideline3" />
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/callButton"
@@ -143,7 +144,8 @@
         android:inputType="date"
         app:layout_constraintBaseline_toBaselineOf="@+id/time"
         app:layout_constraintEnd_toStartOf="@+id/time"
-        app:layout_constraintStart_toStartOf="@+id/guideline3" />
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        android:importantForAutofill="no" />
 
     <EditText
         android:id="@+id/time"
@@ -154,7 +156,8 @@
         android:hint="@string/hh_mm"
         android:inputType="time"
         app:layout_constraintBaseline_toBaselineOf="@+id/programButton"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2" />
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        android:importantForAutofill="no" />
 
     <EditText
         android:id="@+id/text"
@@ -168,7 +171,8 @@
         android:textAlignment="textEnd"
         app:layout_constraintBaseline_toBaselineOf="@+id/openButton"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="@+id/guideline3" />
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/openButton"

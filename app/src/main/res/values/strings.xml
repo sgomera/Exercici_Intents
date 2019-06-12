@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Exercici_Intents</string>
+    <string name="enter_web_page">Enter Web Page</string>
+    <string name="go">Go</string>
+    <string name="call">Call</string>
+    <string name="hh_mm">HH:MM</string>
+    <string name="enter_text">Enter Text</string>
+    <string name="enter_phone_number">Enter Phone Number</string>
+    <string name="dd_mm_yyyy">DD/MM/YYYY</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="open">OPEN</string>
+    <string name="program">PROGRAM</string>
+    <string name="select_file">Select file</string>
+    <string name="photo_container">Photo Container</string>
 </resources>

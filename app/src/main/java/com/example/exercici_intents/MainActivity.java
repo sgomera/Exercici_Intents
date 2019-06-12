@@ -1,6 +1,8 @@
 package com.example.exercici_intents;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -12,7 +14,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
+import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,11 +30,13 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "He entrat en onActivityResult";
     private boolean permissionGranted;
     private Button takePictureButton;
     private Button selectFileButton;
     private ImageView imageView;
     private Uri file;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, 100);
     }
 
+    @SuppressLint("LongLogTag")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -63,7 +71,24 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setImageURI(file);
             }
         }
+
+        if (requestCode == 200 && resultCode == Activity.RESULT_OK) {
+            // The document selected by the user won't be returned in the intent.
+            // Instead, a URI to that document will be contained in the return intent
+            // provided to this method as a parameter.
+            // Pull that URI using data.getData().
+            Uri uri = null;
+            if (data != null) {
+                uri = data.getData();
+                imageView.setImageURI(uri);
+                Log.i(TAG, "Uri: " + uri.toString());
+         //       showImage(uri);
+            }
+        }
     }
+
+
+
 
     //mètode per guardar la foto en un fitxer
     private static File getOutputMediaFile(){
@@ -81,15 +106,35 @@ public class MainActivity extends AppCompatActivity {
                 "IMG_"+ timeStamp + ".jpg");
     }
 
+//mètodes per sel·leccionar un fitxer: Fires an intent to spin up the "file chooser" UI and select an image
+    public void performFileSearch(View view) {
 
+    // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
+    // browser.
+    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+
+    // Filter to only show results that can be "opened", such as a
+    // file (as opposed to a list of contacts or timezones)
+    intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+    // Filter to show only images, using the image MIME data type.
+    intent.setType("image/*");
+
+    startActivityForResult(intent, 200);
+}
 
 
     //obre el navegador amb la pàgina web introduïda
     public void onGoWebButton(View view){
         EditText webPage = (EditText)findViewById(R.id.webPage);
-        Uri uri = Uri.parse(webPage.getText().toString());
-        Intent intentWeb = new Intent(Intent.ACTION_VIEW, uri);
-        startActivity(intentWeb);
+
+        if(URLUtil.isValidUrl(webPage.getText().toString())) {
+            Uri uri = Uri.parse(webPage.getText().toString());
+            Intent intentWeb = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intentWeb);
+        } else {
+            Toast.makeText(MainActivity.this,"Enter a valid URL", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
